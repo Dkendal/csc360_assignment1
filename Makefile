@@ -1,14 +1,14 @@
 CC=gcc
 CFLAGS=-c -Wall
-LDFLAGS=
-SOURCES=
+LDFLAGS=-lreadline
+SOURCES=src/main.c
 OBJECTS=$(SOURCES:.c=.o)
-    EXECUTABLE=hello
+EXECUTABLE=main
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-    $(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
-.c.o:
-    $(CC) $(CFLAGS) $< -o $@
+clean:
+	rm -rf $(OBJECTS) $(EXECUTABLE)
