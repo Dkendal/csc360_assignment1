@@ -22,7 +22,7 @@ char * get_prompt() {
   struct prompt new_prompt = { "RSI: ", 5, " > ", 3 };
   char *prompt_str;
 
-  getcwd(new_prompt.dir, PATH_MAX); // just let it malloc as nessicary
+  getcwd(new_prompt.dir, PATH_MAX);
 
   new_prompt.dir_len = strlen(new_prompt.dir);
 

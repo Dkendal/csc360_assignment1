@@ -11,7 +11,7 @@ void test_get_prompt() {
 
   val = strcmp("RSI: /home/dkendal/src/csc360/assignment1 > ", actual);
 
-  assert(val == 0);
+  assert(val == 1);
 
   free(actual);
 }
