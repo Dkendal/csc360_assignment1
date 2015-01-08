@@ -1,0 +1,20 @@
+{
+  "src/*.h": {
+    "alternate": "src/{}.cc",
+    "type": "header"
+  },
+  "src/*.c": {
+    "alternate": ["test/{}_test.cc"],
+    "dispatch": "make test TARGET={} && ./test_runner",
+    "type": "source"
+  },
+  "test/*": {
+    "dispatch": "valgrind ./test_runner --tool addrcheck",
+    "start": "gdbtui ./test_runner"
+  },
+  "test/*_test.c": {
+    "alternate": "src/{}.cc",
+    "type": "test",
+    "make": "make test"
+  }
+}

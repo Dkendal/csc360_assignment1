@@ -1,14 +1,20 @@
 CC=gcc
-CFLAGS=-c -Wall
+CFLAGS=-c -Wall -g
 LDFLAGS=-lreadline
-SOURCES=src/main.c
+SOURCES=src/main.c src/prompt.c
+TEST_SOURCES=test/prompt_test.c
 OBJECTS=$(SOURCES:.c=.o)
+TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
 EXECUTABLE=main
+TEST_EXECUTABLE=test_runner
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
+test: $(TEST_OBJECTS)
+	$(CC) $(TEST_OBJECTS) -o $(TEST_EXECUTABLE) $(LDFLAGS)
+
 clean:
-	rm -rf $(OBJECTS) $(EXECUTABLE)
+	rm -rf $(OBJECTS) $(EXECUTABLE) $(TEST_EXECUTABLE) $(TEST_OBJECTS)
