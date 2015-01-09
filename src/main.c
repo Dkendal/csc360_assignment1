@@ -8,11 +8,29 @@
 
 // execut the command denoted in cmd
 void exec(char * cmd) {
-  char *argv[1] = { "" };
+  // lazy, assume no more than 256 options
+  char *argv[256] = {};
+  char **curr_arg;
+  char *tok;
   int retval;
-  retval = execvp(cmd, argv);
+
+  for(tok = strtok(cmd, " "), curr_arg = argv;
+      tok != NULL;
+      tok = strtok(NULL, " "), curr_arg++){
+    *curr_arg = (char *) malloc(1 + strlen(tok));
+    strcpy(*curr_arg, tok);
+  }
+
+  // execvp doens't seem to care that the command
+  // is the first arguement
+  retval = execvp(argv[0], argv);
+
   if(retval == -1) {
     perror(cmd);
+  }
+
+  for(curr_arg = argv; curr_arg != NULL; curr_arg++) {
+    free(curr_arg);
   }
 }
 
