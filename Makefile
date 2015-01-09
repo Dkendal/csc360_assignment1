@@ -1,11 +1,11 @@
 CC=gcc
 CFLAGS=-c -Wall -g
 LDFLAGS=-lreadline
-SOURCES=src/main.c src/prompt.c
+SOURCES=src/rsi.c src/prompt.c
 TEST_SOURCES=test/prompt_test.c
 OBJECTS=$(SOURCES:.c=.o)
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
-EXECUTABLE=main
+EXECUTABLE=rsi
 TEST_EXECUTABLE=test_runner
 
 all: $(SOURCES) $(EXECUTABLE)
