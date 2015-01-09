@@ -5,22 +5,16 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "prompt.h"
+#include "argv.h"
 
-// execut the command denoted in cmd
+
+// execute the command denoted in cmd
 void exec(char * cmd) {
   // lazy, assume no more than 256 options
   char *argv[256] = {};
-  char **curr_arg;
-  char *tok;
   int retval;
 
-  for(tok = strtok(cmd, " "), curr_arg = argv;
-      tok != NULL;
-      tok = strtok(NULL, " "), curr_arg++){
-    *curr_arg = (char *) malloc(1 + strlen(tok));
-    strcpy(*curr_arg, tok);
-  }
-
+  init_argv(cmd, argv);
   // execvp doens't seem to care that the command
   // is the first arguement
   retval = execvp(argv[0], argv);
@@ -29,9 +23,7 @@ void exec(char * cmd) {
     perror(cmd);
   }
 
-  for(curr_arg = argv; curr_arg != NULL; curr_arg++) {
-    free(curr_arg);
-  }
+  free_argv(argv);
 }
 
 int start() {
