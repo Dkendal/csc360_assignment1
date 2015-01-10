@@ -10,19 +10,14 @@
 
 // execute the command denoted in cmd
 void exec(char * cmd) {
-  // lazy, assume no more than 256 options
-  char *argv[256] = {};
-  int retval;
+  char *argv[MAX_ARGS] = {};
 
   init_argv(cmd, argv);
   // execvp doens't seem to care that the command
   // is the first arguement
-  retval = execvp(argv[0], argv);
-
-  if(retval == -1) {
-    perror(cmd);
-  }
-
+  execvp(argv[0], argv);
+  // anything past this point is only if the cmd fails
+  perror(cmd);
   free_argv(argv);
 }
 
