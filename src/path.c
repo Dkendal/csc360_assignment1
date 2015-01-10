@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "path.h"
 
@@ -14,6 +15,7 @@ int change_dir(const char * path) {
 
   switch(path[0]) {
     case '~':
+      path_str = getenv("HOME");
       break;
     case '/':
       break;
