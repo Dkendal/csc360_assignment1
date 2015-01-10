@@ -13,7 +13,10 @@ int change_dir(const char * path) {
   char full_path[PATH_MAX] = {};
   const char * path_str = path;
 
-  switch(path[0]) {
+  if(!path) {
+    path_str = getenv("HOME");
+  }
+  else switch(path[0]) {
     case '~':
       path_str = getenv("HOME");
       break;
