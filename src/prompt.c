@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
-#define PATH_MAX 100
+#include "prompt.h"
 
 struct prompt{
   const char *start;
@@ -19,7 +18,7 @@ int prompt_len(struct prompt p) {
 
 //  "RSI: $pwd > "
 char * get_prompt() {
-  struct prompt new_prompt = { "RSI: ", 5, " > ", 3 };
+  struct prompt new_prompt = { "RSI: ", 5, " > ", 3, {} };
   char *prompt_str;
 
   getcwd(new_prompt.dir, PATH_MAX);
