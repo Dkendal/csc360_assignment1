@@ -10,19 +10,19 @@
 
 // execute the command denoted in cmd
 void exec(char * cmd) {
-  char *argv[MAX_ARGS] = {};
+  struct task task_params;
   int retval = 0, status;
   pid_t pid;
 
-  init_argv(cmd, argv);
+  init_argv(cmd, &task_params);
 
-  if(!strcmp(argv[0], "cd")) {
-    retval = change_dir(argv[1]);
+  if(!strcmp(task_params.cmd, "cd")) {
+    retval = change_dir(task_params.argv[1]);
   }
   else {
     pid = fork();
     waitpid(pid, &status, 0); // wait so output comes before prompt
-    if(!pid) retval = execvp(argv[0], argv);
+    if(!pid) retval = execvp(task_params.cmd, task_params.argv);
   }
 
   //check for errors
@@ -30,7 +30,7 @@ void exec(char * cmd) {
     perror(cmd);
   }
 
-  free_argv(argv);
+  free_argv(&task_params);
 }
 
 int start() {
