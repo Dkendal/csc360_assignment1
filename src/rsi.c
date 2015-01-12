@@ -26,9 +26,9 @@ void exec(char * cmd) {
   }
 
   //check for errors
-  if(retval) {
-    perror(cmd);
-  }
+  if(retval) perror(cmd);
+
+  if(!pid) exit(0); // process forked but couldn't execute the cmd
 
   free_argv(&task_params);
 }
