@@ -1,6 +1,5 @@
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "argv.h"
 // arg_str
 //  the string to be parsed
@@ -35,9 +34,17 @@ void init_argv(char *arg_str, struct task *task_params) {
 
   argv[count] = 0;
 
+  if(!strcmp(argv[count - 1], "&")) {
+    task_params->run_in_bg = 1;
+    free(argv[count - 1]);
+    argv[count - 1] = 0;
+  }
+  else {
+    task_params->run_in_bg = 0;
+  }
+
   task_params->argv = argv;
   task_params->cmd = argv[0];
-  task_params->run_in_bg = 0;
 }
 
 void free_argv(struct task *task_params) {
