@@ -1,12 +1,18 @@
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include "argv.h"
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+#include "task.h"
+
 // arg_str
 //  the string to be parsed
 // argv
 //  an initialized array of pointers to each individual token, each tokens are
 //  malloc'd strings and will need to be freed after use
-void init_argv(char *arg_str, struct task *task_params) {
+void task_init(char *arg_str, struct task *task_params) {
   char **argv, *tok;
   int count, size;
 
@@ -47,7 +53,7 @@ void init_argv(char *arg_str, struct task *task_params) {
   task_params->cmd = argv[0];
 }
 
-void free_argv(struct task *task_params) {
+void task_free(struct task *task_params) {
   int i;
   char **curr_arg;
   for(curr_arg = task_params->argv, i = 0;
@@ -56,4 +62,41 @@ void free_argv(struct task *task_params) {
     free(*curr_arg);
   }
   free(task_params->argv);
+}
+
+pid_t task_spawn_handler(struct task task_params, TaskHandler handler) {
+  pid_t pid;
+
+  pid = fork();
+  if (pid == 0) {
+    if(handler(task_params) == -1) {
+      perror(task_params.cmd);
+    }
+    exit(1);
+  }
+  return pid;
+}
+
+int task_exec(struct task task_params) {
+  return execvp(task_params.cmd, task_params.argv);
+}
+
+int task_supervisor(struct task task_params) {
+  pid_t pid;
+  int status;
+  pid = task_spawn_handler(task_params, task_exec);
+  printf("\n[%d]\n", pid);
+  waitpid(pid, &status, 0);
+  printf("[%d] process finished\n", pid);
+  return 1;
+}
+
+void task_run(struct task task_params) {
+  int status;
+  if (task_params.run_in_bg) {
+    task_spawn_handler(task_params, task_supervisor);
+  }
+  else {
+    waitpid(task_spawn_handler(task_params, task_exec), &status, 0);
+  }
 }

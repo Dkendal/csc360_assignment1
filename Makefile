@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c -Wall -g
 LDFLAGS=-lreadline
-SOURCES=src/rsi.c src/prompt.c src/argv.c src/path.c
+SOURCES=src/rsi.c src/prompt.c src/task.c src/path.c
 TEST_SOURCES=test/prompt_test.c
 OBJECTS=$(SOURCES:.c=.o)
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
