@@ -8,27 +8,56 @@
 #include "path.h"
 #include "argv.h"
 
+
+typedef int (TaskHandler(struct task));
+
+pid_t spawn_task_handler(struct task task_params, TaskHandler handler, int async) {
+  pid_t pid;
+  int status;
+
+  pid = fork();
+  if (pid == 0) {
+    if(handler(task_params) == -1) {
+      perror(task_params.cmd);
+    }
+    exit(1);
+  }
+  if (!async) {
+    waitpid(pid, &status, 0);
+  }
+  return pid;
+}
+
+int exec_cmd(struct task task_params) {
+  return execvp(task_params.cmd, task_params.argv);
+}
+
+int task_supervisor(struct task task_params) {
+  pid_t pid;
+  pid = spawn_task_handler(task_params, exec_cmd, 0);
+  printf("[%d] process finished\n", pid);
+  return 1;
+}
+
 // execute the command denoted in cmd
 void exec(char * cmd) {
   struct task task_params;
-  int retval = 0, status;
-  pid_t pid;
 
   init_argv(cmd, &task_params);
 
   if(!strcmp(task_params.cmd, "cd")) {
-    retval = change_dir(task_params.argv[1]);
+    if(!change_dir(task_params.argv[1])) {
+      perror(task_params.cmd);
+    }
   }
   else {
-    pid = fork();
-    waitpid(pid, &status, 0); // wait so output comes before prompt
-    if(!pid) retval = execvp(task_params.cmd, task_params.argv);
+    if(task_params.run_in_bg) {
+      spawn_task_handler(task_params, task_supervisor, 1);
+    }
+    else {
+      spawn_task_handler(task_params, exec_cmd, 0);
+    }
   }
-
-  //check for errors
-  if(retval) perror(cmd);
-
-  if(!pid) exit(0); // process forked but couldn't execute the cmd
 
   free_argv(&task_params);
 }
