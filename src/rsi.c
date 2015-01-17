@@ -16,6 +16,7 @@ void exec(char * cmd) {
 
   if(!strcmp(task_params.cmd, "cd")) {
     if(!change_dir(task_params.argv[1])) {
+      fprintf(stderr, "RSI: ");
       perror(task_params.cmd);
     }
   }

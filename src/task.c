@@ -70,6 +70,7 @@ pid_t task_spawn_handler(struct task task_params, TaskHandler handler) {
   pid = fork();
   if (pid == 0) {
     if(handler(task_params) == -1) {
+      fprintf(stderr, "RSI: ");
       perror(task_params.cmd);
     }
     exit(1);
