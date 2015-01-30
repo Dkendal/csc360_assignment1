@@ -92,12 +92,13 @@ int task_supervisor(struct task task_params) {
   return 1;
 }
 
-void task_run(struct task task_params) {
+pid_t task_run(struct task task_params) {
   int status;
   if (task_params.run_in_bg) {
-    task_spawn_handler(task_params, task_supervisor);
+    return task_spawn_handler(task_params, task_supervisor);
   }
   else {
     waitpid(task_spawn_handler(task_params, task_exec), &status, 0);
   }
+  return 0;
 }

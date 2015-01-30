@@ -9,8 +9,9 @@
 #include "task.h"
 
 // execute the command denoted in cmd
-void exec(char * cmd) {
+pid_t exec(char * cmd) {
   struct task task_params;
+  pid_t supervisor_pid;
 
   task_init(cmd, &task_params);
 
@@ -25,10 +26,12 @@ void exec(char * cmd) {
   }
 
   task_free(&task_params);
+  return supervisor_pid;
 }
 
 int start() {
   char *buf, *prompt_str;
+  pid_t supervisor_pid;
 
   for(;; free(buf)) {
     prompt_str = get_prompt();
@@ -42,7 +45,7 @@ int start() {
     }
     // empty string don't do anything
     else if(strcmp(buf, "") != 0) {
-      exec(buf);
+      supervisor_pid = exec(buf);
     }
   }
   return 0;

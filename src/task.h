@@ -14,5 +14,5 @@ int task_supervisor(struct task task_params);
 pid_t task_spawn_handler(struct task task_params, TaskHandler handler);
 void task_free(struct task *task_params);
 void task_init(char *arg_str, struct task *task_params);
-void task_run(struct task task_params);
+pid_t task_run(struct task task_params);
 #endif
