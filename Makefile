@@ -10,7 +10,10 @@ TEST_EXECUTABLE=test_runner
 
 all: $(SOURCES) $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS)
+list:
+	$(MAKE) -C list
+
+$(EXECUTABLE): list $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ -L./list/build $(LDFLAGS)
 
 test: $(TEST_OBJECTS)
@@ -18,3 +21,6 @@ test: $(TEST_OBJECTS)
 
 clean:
 	rm -rf $(OBJECTS) $(EXECUTABLE) $(TEST_EXECUTABLE) $(TEST_OBJECTS)
+	$(MAKE) -C list clean
+
+.PHONY: test list
